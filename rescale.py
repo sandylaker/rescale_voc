@@ -165,7 +165,6 @@ class Preprocessor:
             traceback.print_exc()
             return 0
         if image is None:
-            print('Empty image: {}'.format(img_abs_path))
             return 0
         annot = self.load_annot_single(tree)
 
