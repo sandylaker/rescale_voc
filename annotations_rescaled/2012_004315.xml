@@ -18,10 +18,10 @@
 			<walking>0</walking>
 		</actions>
 		<bndbox>
-			<xmax>189</xmax>
-			<xmin>157</xmin>
-			<ymax>150</ymax>
-			<ymin>96</ymin>
+			<xmax>378</xmax>
+			<xmin>313</xmin>
+			<ymax>300</ymax>
+			<ymin>191</ymin>
 		</bndbox>
 		<difficult>0</difficult>
 		<pose>Unspecified</pose>
@@ -33,8 +33,8 @@
 	<segmented>0</segmented>
 	<size>
 		<depth>3</depth>
-		<height>150</height>
-		<width>200</width>
+		<height>300</height>
+		<width>400</width>
 	</size>
 	<source>
 		<annotation>PASCAL VOC2012</annotation>

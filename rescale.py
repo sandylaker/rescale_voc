@@ -1,4 +1,3 @@
-from albumentations import Compose, BboxParams, LongestMaxSize
 import xml.etree.ElementTree as ET
 import os
 import os.path as osp
@@ -7,6 +6,7 @@ import cv2
 import numpy as np
 from tqdm import tqdm
 import traceback
+from transform import LongestMaxSize
 
 
 class Preprocessor:
@@ -16,9 +16,11 @@ class Preprocessor:
                  img_dst_root: str,
                  annot_dst_root: str,
                  max_size: int = 1000):
-        """Rescale the images and annotations (in Pascal VOC format) using
-        albumentations.LongestMaxSize, and save the rescaled images along with
-        the new notation files into destination folders. Call `process` to start processing.
+        """Rescale the images and annotations (in Pascal VOC format), such that
+        1. the longest side of the rescaled image is at most max_size,
+        2. the aspect ratio is kept,
+        and save the rescaled images along with the new notation files into destination folders.
+        Call `process` to start processing.
 
         Note that this class currently only supports that all images have the same extension.
 
@@ -27,7 +29,7 @@ class Preprocessor:
             annot_root (str): root where original 
             img_dst_root (str): destination root where rescaled images will be saved
             annot_dst_root (str): destination root where rescaled annotations will be saved
-            max_size (int): max_size argument in albumentations.LongestMaxSize
+            max_size (int): max_size of the longest side
         """
         self.img_root = img_root
         self.annot_root = annot_root
@@ -57,8 +59,7 @@ class Preprocessor:
         self.img_names = self._extract_base_names(self.img_abs_paths)
         self.annot_names = self._extract_base_names(self.annot_abs_paths)
 
-        self.transform = Compose([LongestMaxSize(max_size=self.max_size, always_apply=True)],
-            bbox_params=BboxParams(format='pascal_voc', label_fields=['name', 'difficult']))
+        self.transform = LongestMaxSize(max_size=self.max_size)
 
     def process(self):
         """Process the images and annotations"""
@@ -82,12 +83,6 @@ class Preprocessor:
 
     def _extract_base_names(self, file_abs_paths):
         return [osp.basename(osp.splitext(p)[0]) for p in file_abs_paths]
-
-    def rescale_single(self, img: np.ndarray, annot:dict):
-        data = dict(image=img)
-        data.update(annot)
-        result = self.transform(**data)
-        return result
 
     @classmethod
     def load_annot_single(cls, tree: ET.ElementTree):
