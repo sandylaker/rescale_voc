@@ -36,8 +36,6 @@ def compare_bboxes(file_name):
     new_tree = ET.parse(new_annot_path)
     origin_annot = Preprocessor.load_annot_single(origin_tree)
     new_annot = Preprocessor.load_annot_single(new_tree)
-    print('original bboxes: ', origin_annot['bboxes'])
-    print('new bboxes: ', new_annot['bboxes'])
 
     fig, ax = plt.subplots(1, 2, figsize=(12, 10))
     visualize(origin_img, origin_annot['bboxes'], ax[0], title='origin: ' + file_name)
